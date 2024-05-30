@@ -10,7 +10,7 @@
 ### Step 2: Run our setup script in your terminal
 ```bash setup.sh```
 
-We have now generated the BAM files with aligned sequenced reads that are sorted and indexed. We will use these BAM files to identify single nucleotide substitutions using our tool, SNVC.  To run our variant caller, run the following commands
+### Step 3: We have now generated the BAM files with aligned sequenced reads that are sorted and indexed. We will use these BAM files to identify single nucleotide substitutions using our tool, SNVC.  To run our variant caller, run the following commands
 
 ```python code.py data/reference.fasta data/variant1.fasta data/sorted_aligned1_reads.bam results/output1.vcf```
 
