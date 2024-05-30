@@ -1,16 +1,16 @@
 import pysam
 import os
 import sys
-import pybwa
 from pysam import FastaFile
 
 def index_reference_genome(reference_fasta):
-    bwa_index = pybwa.Index(reference_fasta)
-    bwa_index.build_index()
+    os.system(f'bwa index {reference_fasta}')
+    os.system(f'samtools faidx {reference_fasta}')
+    print(f"Indexed {reference_fasta}")
 
-def align_reads_to_reference(bwa_index, reads_fastq):
-    alignment = bwa_index.align(reads_fastq)
-    return alignment
+def align_reads_to_reference(reference_fasta, reads_fastq, output_sam):
+    os.system(f'bwa mem {reference_fasta} {reads_fastq} > {output_sam}')
+    print(f"Aligned {reads_fastq} to {reference_fasta}")
 
 def index_bam_file(bam_file):
     os.system(f'samtools index {bam_file}')
@@ -23,7 +23,8 @@ def analyze_reads(bam_file, reference_fasta):
 
     for pileupcolumn in bam.pileup():
         ref_pos = pileupcolumn.reference_pos
-        ref_base = reference.fetch(reference.get_reference_name(pileupcolumn.tid), ref_pos, ref_pos+1)
+        ref_name = bam.get_reference_name(pileupcolumn.tid)
+        ref_base = reference.fetch(ref_name, ref_pos, ref_pos+1)
         base_counts = {}
         total_reads = 0
 
@@ -35,7 +36,7 @@ def analyze_reads(bam_file, reference_fasta):
 
         for base, count in base_counts.items():
             if base != ref_base and count / total_reads > 0.2:
-                variants.append((reference.get_reference_name(pileupcolumn.tid), ref_pos, ref_base, base, count / total_reads))
+                variants.append((ref_name, ref_pos, ref_base, base, count / total_reads))
 
     return variants
 
@@ -43,6 +44,7 @@ def write_vcf(variants, reference_fasta, output_vcf):
     vcf_header = f"""##fileformat=VCFv4.2
 ##reference={reference_fasta}
 #CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO"""
+    os.makedirs(os.path.dirname(output_vcf), exist_ok=True)
     with open(output_vcf, 'w') as vcf:
         vcf.write(vcf_header + '\n')
         for variant in variants:
@@ -56,17 +58,22 @@ def main():
 
     reference_fasta, reads_fastq, output_bam, output_vcf = sys.argv[1:]
 
+    # Index reference genome
     index_reference_genome(reference_fasta)
-    bwa_index = pybwa.Index(reference_fasta)
-    alignment = align_reads_to_reference(bwa_index, reads_fastq)
 
-    with open(output_bam, 'wb') as bam_out:
-        bam_out.write(alignment)
+    # Align reads to reference genome
+    output_sam = output_bam.replace('.bam', '.sam')
+    align_reads_to_reference(reference_fasta, reads_fastq, output_sam)
 
+    # Index BAM file
     index_bam_file(output_bam)
 
+    # Analyze reads and call variants
     variants = analyze_reads(output_bam, reference_fasta)
+
+    # Write VCF file
     write_vcf(variants, reference_fasta, output_vcf)
+    print(f"Variants written to {output_vcf}")
 
 if __name__ == "__main__":
     main()
