@@ -7,7 +7,7 @@
 ``` git clone https://github.com/archxta/cse185_project ```
 ``` cd cse185_project ```
 
-### Step 2: Run our setup script in your termianl
+### Step 2: Run our setup script in your terminal
 ```bash setup.sh```
 
 We have now generated the BAM files with aligned sequenced reads that are sorted and indexed. We will use these BAM files to identify single nucleotide substitutions using our tool, SNVC.  
