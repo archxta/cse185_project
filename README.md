@@ -11,6 +11,7 @@ Step 1: Clone our github repository and cd into the directory
 ``` cd cse185_project ```
 
 Step 2: Install the necessary dependents
+
 ``` brew install samtools```
 
 ``` brew install bwa ```
