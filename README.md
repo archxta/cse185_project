@@ -1,5 +1,8 @@
 # Single Nucleotide Variant Caller (SNVC) 
 
+## Description
+
+
 ## Installation instructions
 ### Note: We assume you already have python3 installed since these installations require python. You can check if you have python3 installed by doing ```python3 --version```. Please install python3 on your laptop if you haven't already. Another way to run this tool  would be on Juypter Notebook terminal. 
 
