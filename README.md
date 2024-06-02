@@ -39,6 +39,8 @@ Step 4: We have now generated the BAM files with aligned sequenced reads that ar
 
 This should have generated the final VCF file which contains information about the genetic variants detected in our DNA sequencing data that we obtained from a sickle cell mutation on the HBB gene. 
 
+You can view the VCF file contents using the ```cat``` command followed by the filepath anf filename (ex. ```cat results/output1.vcf```
+
 
 
 
