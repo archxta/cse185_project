@@ -36,4 +36,3 @@ samtools index data/sorted_aligned3_reads.bam
 
 # We have now generated the BAM files with aligned sequenced reads that are sorted and indexed.
 # We will use these BAM files to identify single nucleotide substitutions using our tool, SNVC.
-"setup.sh" 38L, 1582C                                                                                      38,95         All
