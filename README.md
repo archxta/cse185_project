@@ -5,6 +5,7 @@
 
 
 Step 1: Clone our github repository and cd into the directory
+
 ``` git clone https://github.com/archxta/cse185_project ```
 
 ``` cd cse185_project ```
