@@ -5,6 +5,8 @@
 
 ### For Mac users: if you don't already have brew installed please install it using ``` /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" ``` and follow the instructions in the script. You can check if brew is installed by running this command ``` brew --version ```. 
 
+### For Windows Users: 
+
 
 Step 1: Clone our github repository and cd into the directory
 
