@@ -1,7 +1,7 @@
 # Single Nucleotide Variant Caller (SNVC) 
 
 ## Installation instructions
-### Note: We assume you already have python3 installed since these installations require python. You can check if you have python3 installed by doing ```python3 --version```. Please install python3 on your laptop if you haven't already. You could also run this on jupiter notebook. 
+### Note: We assume you already have python3 installed since these installations require python. You can check if you have python3 installed by doing ```python3 --version```. Please install python3 on your laptop if you haven't already. Another way to run this tool  would be on Juypter Notebook terminal. 
 
 ### For Mac users: if you don't already have brew installed please install it using ``` /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" ``` and follow the instructions in the script. You can check if brew is installed by running this command ``` brew --version ```. 
 
