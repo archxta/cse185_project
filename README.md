@@ -1,7 +1,8 @@
 # Single Nucleotide Variant Caller (SNVC) 
 
 ## Installation instructions
-### Note: We assume you already have python3 installed since these installations require python. Please install python3 on your laptop if you haven't already. You could also run this on jupiter notebook. 
+### Note: We assume you already have python3 installed since these installations require python. You can check if you have python3 installed by doing ```python3 --version```. Please install python3 on your laptop if you haven't already. You could also run this on jupiter notebook. 
+
 
 Step 1: Clone our github repository and cd into the directory
 ``` git clone https://github.com/archxta/cse185_project ```
