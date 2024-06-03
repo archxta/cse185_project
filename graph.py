@@ -35,9 +35,6 @@ plt.xlabel('Variant positions in output.vcf')
 plt.ylabel('Variant positions in output2.vcf')
 plt.title('Scatter Plot of Variant Positions')
 
-# Add diagonal line with slope 1
-max_position = max(max(positions1), max(positions2))
-plt.plot([0, max_position], [0, max_position], color='black', linestyle='--')
 
 # Add legend
 plt.legend()
