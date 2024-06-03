@@ -1,22 +1,31 @@
+import vcf
 import matplotlib.pyplot as plt
 
-# Define the sequences
-sequence1 = "AACTTCATCCACGTTCACCTTGCCCCACAGGGCAGTAACGGCAGACTTCTCCACAGGAGTC"
-sequence2 = "AACTTCATCCACGTTCACCTTGCCCCACAGGGCAGTAACGGCAGACTTCTCCTCAGGAGTC"
+def extract_variant_positions(vcf_file):
+    positions = []
+    vcf_reader = vcf.Reader(open(vcf_file, 'r'))
+    for record in vcf_reader:
+        positions.append(record.POS)
+    return positions
 
-# Define x coordinates for each nucleotide
-x1 = range(len(sequence1))
-x2 = range(len(sequence2))
+# Path to the VCF files
+vcf_file1 = 'output.vcf'
+vcf_file2 = 'output2.vcf'
 
-# Plotting
-plt.figure(figsize=(15, 2))
-plt.scatter(x1, [1] * len(x1), c='blue', label='Sequence 1', s=100)
-plt.scatter(x2, [2] * len(x2), c='red', label='Sequence 2', s=100)
-plt.yticks([])
-plt.xlabel('Position')
-plt.title('Sequence Comparison')
-plt.legend()
+# Extract variant positions from VCF files
+positions1 = extract_variant_positions(vcf_file1)
+positions2 = extract_variant_positions(vcf_file2)
 
-# Save the plot to a file
-plt.savefig('sequence_comparison.png')
-plt.close()
+# Create scatter plot
+plt.figure(figsize=(8, 6))
+plt.scatter(positions1, positions2, color='blue', alpha=0.5)
+plt.xlabel('Variant positions in output.vcf')
+plt.ylabel('Variant positions in output2.vcf')
+plt.title('Scatter Plot of Variant Positions')
+plt.grid(True)
+
+# Save scatter plot to a file
+plt.savefig('scatter_plot.png')
+
+# Show the plot
+plt.show()
