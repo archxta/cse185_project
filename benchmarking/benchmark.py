@@ -1,6 +1,7 @@
 import subprocess
 import time
 import matplotlib.pyplot as plt
+import sys
 
 def benchmark_tool(tool_cmd):
     """Benchmark a given command line tool for runtime."""
@@ -18,7 +19,7 @@ def run_varscan(input_mpileup, output_vcf):
     )
     subprocess.run(varscan_cmd, shell=True)
 
-def run_mpileup_py(input_mpileup, output_vcf, min_var_freq=0.2, min_avg_qual=15, p_value_thresh=0.01):
+def run_mpileup_py(input_mpileup, output_vcf, min_var_freq, min_avg_qual, p_value_thresh):
     """Run mpileup.py tool."""
     mpileup_py_cmd = (
         f"python3 mpileup.py {input_mpileup} {output_vcf} "
@@ -35,7 +36,7 @@ def count_variants(vcf_file):
         variants = 0
     return variants
 
-def compare_tools(input_mpileup, output_vcf_varscan, output_vcf_mpileup_py, min_var_freq=0.2, min_avg_qual=15, p_value_thresh=0.01):
+def compare_tools(input_mpileup, output_vcf_varscan, output_vcf_mpileup_py, min_var_freq, min_avg_qual, p_value_thresh):
     """Compare VarScan and mpileup.py in terms of number of variants."""
     # Run VarScan
     run_varscan(input_mpileup, output_vcf_varscan)
@@ -72,13 +73,20 @@ def visualize_results(results):
     plt.show()
 
 if __name__ == "__main__":
-    input_mpileup = "NA12878_child.mpileup"
+    if len(sys.argv) < 4:
+        print("Usage: python script.py <input_mpileup> <output_vcf> <min_var_freq> [<min_avg_qual> <p_value_thresh>]")
+        sys.exit(1)
+
+    input_mpileup = sys.argv[1]
     output_vcf_varscan = "varscan_output.vcf"
-    output_vcf_mpileup_py = "mpileup_py_output.vcf"
+    output_vcf_mpileup_py = sys.argv[2]
+    min_var_freq = float(sys.argv[3])
+    min_avg_qual = int(sys.argv[4]) if len(sys.argv) > 4 else 15
+    p_value_thresh = float(sys.argv[5]) if len(sys.argv) > 5 else 0.01
     results_file = "comparison_results.txt"
 
     # Compare tools
-    results = compare_tools(input_mpileup, output_vcf_varscan, output_vcf_mpileup_py)
+    results = compare_tools(input_mpileup, output_vcf_varscan, output_vcf_mpileup_py, min_var_freq, min_avg_qual, p_value_thresh)
 
     # Save results to a file
     save_results_to_file(results, results_file)
