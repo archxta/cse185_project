@@ -1,23 +1,24 @@
 import subprocess
 import time
+import os
 import matplotlib.pyplot as plt
 
 def benchmark_tool(tool_cmd):
     """Benchmark a given command line tool for runtime."""
     start_time = time.time()
-    subprocess.run(tool_cmd, shell=True)
+    subprocess.run(tool_cmd, shell=True, check=True)
     runtime = time.time() - start_time
     return runtime
 
 def run_varscan(input_mpileup, output_vcf):
     """Run VarScan tool."""
     varscan_cmd = f"java -jar VarScan.jar mpileup2snp {input_mpileup} --min-var-frequency 0.2 --min-freq-for-hom 0.8 --p-value 0.01 --output-vcf 1 --variants-only > {output_vcf}"
-    subprocess.run(varscan_cmd, shell=True)
+    subprocess.run(varscan_cmd, shell=True, check=True)
 
 def run_snv_caller(input_mpileup, output_vcf):
     """Run SNV Caller tool."""
-    snv_caller_cmd = f"python3 mpileup.py {input_mpileup} {output_vcf}"
-    subprocess.run(snv_caller_cmd, shell=True)
+    snv_caller_cmd = f"python3 snv_caller.py {input_mpileup} {output_vcf}"
+    subprocess.run(snv_caller_cmd, shell=True, check=True)
 
 def count_variants(vcf_file):
     """Count the number of variants in a VCF file."""
@@ -60,6 +61,17 @@ if __name__ == "__main__":
     input_mpileup = "NA12878_child.mpileup"
     output_vcf_varscan = "varscan_output.vcf"
     output_vcf_snvcaller = "snvcaller_output.vcf"
+
+    # Verify file existence
+    if not os.path.exists("VarScan.jar"):
+        print("Error: VarScan.jar not found.")
+        exit(1)
+    if not os.path.exists("snv_caller.py"):
+        print("Error: snv_caller.py not found.")
+        exit(1)
+    if not os.path.exists(input_mpileup):
+        print(f"Error: Input mpileup file {input_mpileup} not found.")
+        exit(1)
 
     # Compare tools
     results = compare_tools(input_mpileup, output_vcf_varscan, output_vcf_snvcaller)
