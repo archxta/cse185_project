@@ -16,16 +16,6 @@ def index_bam_file(bam_file):
     os.system(f'samtools index {bam_file}')
     print(f"Indexed {bam_file}")
 
-def analyze_mpileup(mpileup_file):
-    variants = []
-    with open(mpileup_file) as mpileup:
-        for line in mpileup:
-            fields = line.split()
-            chrom, pos, ref_base, count = fields[0], int(fields[1]) - 1, fields[2], int(fields[3])
-            alt_base = fields[4] if len(fields) > 4 else '.'
-            variants.append((chrom, pos, ref_base, alt_base, count))
-    return variants
-
 def analyze_reads(bam_file, reference_fasta):
     bam = pysam.AlignmentFile(bam_file, "rb")
     reference = FastaFile(reference_fasta)
@@ -50,7 +40,6 @@ def analyze_reads(bam_file, reference_fasta):
 
     return variants
 
-
 def write_vcf(variants, reference_fasta, output_vcf):
     vcf_header = f"""##fileformat=VCFv4.2
 ##reference={reference_fasta}
@@ -63,28 +52,24 @@ def write_vcf(variants, reference_fasta, output_vcf):
             vcf.write(f"{chrom}\t{pos+1}\t.\t{ref}\t{alt}\t.\tPASS\t.\n")
 
 def main():
-    if len(sys.argv) < 5:
-        print("Usage: python script.py <input_file> <reference_fasta> <output_bam> <output_vcf>")
+    if len(sys.argv) != 5:
+        print("Usage: python scripts/code.py <reference_fasta> <reads_fastq> <output_bam> <output_vcf>")
         sys.exit(1)
 
-    input_file, reference_fasta, output_bam, output_vcf = sys.argv[1:]
-
-    if input_file.endswith('.mpileup'):
-        # Analyze mpileup file and call variants
-        variants = analyze_mpileup(input_file)
-    else:
-        # Analyze reads and call variants
-        variants = analyze_reads(input_file, reference_fasta)
+    reference_fasta, reads_fastq, output_bam, output_vcf = sys.argv[1:]
 
     # Index reference genome
     index_reference_genome(reference_fasta)
 
     # Align reads to reference genome
     output_sam = output_bam.replace('.bam', '.sam')
-    align_reads_to_reference(reference_fasta, input_file, output_sam)
+    align_reads_to_reference(reference_fasta, reads_fastq, output_sam)
 
     # Index BAM file
     index_bam_file(output_bam)
+
+    # Analyze reads and call variants
+    variants = analyze_reads(output_bam, reference_fasta)
 
     # Write VCF file
     write_vcf(variants, reference_fasta, output_vcf)
