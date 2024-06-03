@@ -16,6 +16,11 @@ vcf_file2 = 'output2.vcf'
 positions1 = extract_variant_positions(vcf_file1)
 positions2 = extract_variant_positions(vcf_file2)
 
+# Ensure both lists have the same length
+min_length = min(len(positions1), len(positions2))
+positions1 = positions1[:min_length]
+positions2 = positions2[:min_length]
+
 # Create scatter plot
 plt.figure(figsize=(8, 6))
 plt.scatter(positions1, positions2, color='blue', alpha=0.5)
