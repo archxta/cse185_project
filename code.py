@@ -42,7 +42,7 @@ def analyze_reads(bam_file, reference_fasta):
 
         for base, count in base_counts.items():
             if base != ref_base and count / total_reads > 0.2:
-                variants.append((ref_name, ref_pos+1, '.', ref_base, base, '.', 'PASS', af, dp))
+                variants.append((ref_name, ref_pos+1, ref_base, base, af, dp))
 
     return variants
 
@@ -54,8 +54,8 @@ def write_vcf(variants, reference_fasta, output_vcf):
     with open(output_vcf, 'w') as vcf:
         vcf.write(vcf_header + '\n')
         for variant in variants:
-            chrom, pos, _, ref, alt, qual, filt, af, dp = variant
-            vcf.write(f"{chrom}\t{pos}\t.\t{ref}\t{alt}\t{qual}\t{filt}\t{af}\t{dp}\n")
+            chrom, pos, ref, alt, af, dp = variant
+            vcf.write(f"{chrom}\t{pos}\t{ref}\t{alt}\t{af}\t{dp}\n")
 
 def main():
     if len(sys.argv) != 5:
