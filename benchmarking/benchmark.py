@@ -19,40 +19,44 @@ def run_snv_caller(input_mpileup, output_vcf):
     snv_caller_cmd = f"python snv_caller.py {input_mpileup} {output_vcf}"
     subprocess.run(snv_caller_cmd, shell=True)
 
-def compare_tools(input_mpileup, output_vcf_varscan, output_vcf_snvcaller):
-    """Compare VarScan and SNV Caller in terms of runtime."""
-    # Benchmark VarScan
-    varscan_runtime = benchmark_tool(f"varscan mpileup2snp {input_mpileup} --output-vcf {output_vcf_varscan}")
+def count_variants(vcf_file):
+    """Count the number of variants in a VCF file."""
+    with open(vcf_file, 'r') as f:
+        variants = sum(1 for line in f if not line.startswith('#'))
+    return variants
 
-    # Benchmark SNV Caller
-    snvcaller_runtime = benchmark_tool(f"python snv_caller.py {input_mpileup} {output_vcf_snvcaller}")
+def compare_tools(input_mpileup, output_vcf_varscan, output_vcf_snvcaller):
+    """Compare VarScan and SNV Caller in terms of number of variants."""
+    # Run VarScan
+    run_varscan(input_mpileup, output_vcf_varscan)
+
+    # Run SNV Caller
+    run_snv_caller(input_mpileup, output_vcf_snvcaller)
+
+    # Count variants detected by each tool
+    varscan_variants = count_variants(output_vcf_varscan)
+    snvcaller_variants = count_variants(output_vcf_snvcaller)
 
     return {
-        'VarScan': {'runtime': varscan_runtime},
-        'SNVCaller': {'runtime': snvcaller_runtime}
+        'VarScan': {'variants': varscan_variants},
+        'SNVCaller': {'variants': snvcaller_variants}
     }
 
 def visualize_results(results):
     """Visualize benchmarking results."""
     tools = list(results.keys())
-    runtimes = [results[tool]['runtime'] for tool in tools]
+    variants = [results[tool]['variants'] for tool in tools]
 
-    plt.bar(tools, runtimes, color=['blue', 'green'])
-    plt.title('Runtime Comparison (seconds)')
+    plt.bar(tools, variants, color=['blue', 'green'])
+    plt.title('Number of Variants Detected')
     plt.xlabel('Tool')
-    plt.ylabel('Runtime (seconds)')
+    plt.ylabel('Number of Variants')
     plt.show()
 
 if __name__ == "__main__":
     input_mpileup = "NA12878_child.mpileup"
     output_vcf_varscan = "varscan_output.vcf"
     output_vcf_snvcaller = "snvcaller_output.vcf"
-
-    # Run VarScan
-    run_varscan(input_mpileup, output_vcf_varscan)
-
-    # Run SNV Caller
-    run_snv_caller(input_mpileup, output_vcf_snvcaller)
 
     # Compare tools
     results = compare_tools(input_mpileup, output_vcf_varscan, output_vcf_snvcaller)
