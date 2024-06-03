@@ -27,7 +27,6 @@ plt.scatter(positions1, positions2, color='blue', alpha=0.5)
 plt.xlabel('Variant positions in output.vcf')
 plt.ylabel('Variant positions in output2.vcf')
 plt.title('Scatter Plot of Variant Positions')
-plt.grid(True)
 
 # Add diagonal line with slope 1
 max_position = max(max(positions1), max(positions2))
