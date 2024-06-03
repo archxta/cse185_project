@@ -29,6 +29,10 @@ plt.ylabel('Variant positions in output2.vcf')
 plt.title('Scatter Plot of Variant Positions')
 plt.grid(True)
 
+# Add diagonal line with slope 1
+max_position = max(max(positions1), max(positions2))
+plt.plot([0, max_position], [0, max_position], color='red', linestyle='--')
+
 # Save scatter plot to a file
 plt.savefig('scatter_plot.png')
 
