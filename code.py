@@ -49,7 +49,7 @@ def analyze_reads(bam_file, reference_fasta):
 def write_vcf(variants, reference_fasta, output_vcf):
     vcf_header = f"""##fileformat=VCFv4.2
 ##reference={reference_fasta}
-#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tAF\tDP"""
+#CHROM\tPOS\tREF\tALT\tAF\tDP"""
     os.makedirs(os.path.dirname(output_vcf), exist_ok=True)
     with open(output_vcf, 'w') as vcf:
         vcf.write(vcf_header + '\n')
