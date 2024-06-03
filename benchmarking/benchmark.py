@@ -11,18 +11,21 @@ def benchmark_tool(tool_cmd):
 
 def run_varscan(input_mpileup, output_vcf):
     """Run VarScan tool."""
-    varscan_cmd = f"varscan mpileup2snp {input_mpileup} --output-vcf {output_vcf}"
+    varscan_cmd = f"java -jar VarScan.jar mpileup2snp {input_mpileup} --min-var-frequency 0.2 --min-freq-for-hom 0.8 --p-value 0.01 --output-vcf 1 --variants-only > {output_vcf}"
     subprocess.run(varscan_cmd, shell=True)
 
 def run_snv_caller(input_mpileup, output_vcf):
     """Run SNV Caller tool."""
-    snv_caller_cmd = f"python snv_caller.py {input_mpileup} {output_vcf}"
+    snv_caller_cmd = f"python3 snv_caller.py {input_mpileup} {output_vcf}"
     subprocess.run(snv_caller_cmd, shell=True)
 
 def count_variants(vcf_file):
     """Count the number of variants in a VCF file."""
-    with open(vcf_file, 'r') as f:
-        variants = sum(1 for line in f if not line.startswith('#'))
+    try:
+        with open(vcf_file, 'r') as f:
+            variants = sum(1 for line in f if not line.startswith('#'))
+    except FileNotFoundError:
+        variants = 0
     return variants
 
 def compare_tools(input_mpileup, output_vcf_varscan, output_vcf_snvcaller):
