@@ -23,13 +23,13 @@ common_positions = positions1.intersection(positions2)
 plt.figure(figsize=(8, 6))
 
 # Plot variants found in both files (purple)
-plt.scatter(common_positions, common_positions, color='purple', alpha=0.5, label='Variants in both files')
+plt.scatter(list(common_positions), list(common_positions), color='purple', alpha=0.5, label='Variants in both files')
 
 # Plot variants found only in output.vcf (blue)
-plt.scatter(positions1.difference(positions2), positions1.difference(positions2), color='blue', alpha=0.5, label='Variants only in output.vcf')
+plt.scatter(list(positions1.difference(positions2)), list(positions1.difference(positions2)), color='blue', alpha=0.5, label='Variants only in output.vcf')
 
 # Plot variants found only in output2.vcf (red)
-plt.scatter(positions2.difference(positions1), positions2.difference(positions1), color='red', alpha=0.5, label='Variants only in output2.vcf')
+plt.scatter(list(positions2.difference(positions1)), list(positions2.difference(positions1)), color='red', alpha=0.5, label='Variants only in output2.vcf')
 
 plt.xlabel('Variant positions in output.vcf')
 plt.ylabel('Variant positions in output2.vcf')
