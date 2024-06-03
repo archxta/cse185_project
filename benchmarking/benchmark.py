@@ -1,24 +1,23 @@
 import subprocess
 import time
-import os
 import matplotlib.pyplot as plt
 
 def benchmark_tool(tool_cmd):
     """Benchmark a given command line tool for runtime."""
     start_time = time.time()
-    subprocess.run(tool_cmd, shell=True, check=True)
+    subprocess.run(tool_cmd, shell=True)
     runtime = time.time() - start_time
     return runtime
 
 def run_varscan(input_mpileup, output_vcf):
     """Run VarScan tool."""
     varscan_cmd = f"java -jar VarScan.jar mpileup2snp {input_mpileup} --min-var-frequency 0.2 --min-freq-for-hom 0.8 --p-value 0.01 --output-vcf 1 --variants-only > {output_vcf}"
-    subprocess.run(varscan_cmd, shell=True, check=True)
+    subprocess.run(varscan_cmd, shell=True)
 
-def run_snv_caller(input_mpileup, output_vcf):
-    """Run SNV Caller tool."""
-    snv_caller_cmd = f"python3 snv_caller.py {input_mpileup} {output_vcf}"
-    subprocess.run(snv_caller_cmd, shell=True, check=True)
+def run_mpileup_py(input_mpileup, output_vcf):
+    """Run mpileup.py tool."""
+    mpileup_py_cmd = f"python3 mpileup.py {input_mpileup} {output_vcf}"
+    subprocess.run(mpileup_py_cmd, shell=True)
 
 def count_variants(vcf_file):
     """Count the number of variants in a VCF file."""
@@ -29,21 +28,21 @@ def count_variants(vcf_file):
         variants = 0
     return variants
 
-def compare_tools(input_mpileup, output_vcf_varscan, output_vcf_snvcaller):
-    """Compare VarScan and SNV Caller in terms of number of variants."""
+def compare_tools(input_mpileup, output_vcf_varscan, output_vcf_mpileup_py):
+    """Compare VarScan and mpileup.py in terms of number of variants."""
     # Run VarScan
     run_varscan(input_mpileup, output_vcf_varscan)
 
-    # Run SNV Caller
-    run_snv_caller(input_mpileup, output_vcf_snvcaller)
+    # Run mpileup.py
+    run_mpileup_py(input_mpileup, output_vcf_mpileup_py)
 
     # Count variants detected by each tool
     varscan_variants = count_variants(output_vcf_varscan)
-    snvcaller_variants = count_variants(output_vcf_snvcaller)
+    mpileup_py_variants = count_variants(output_vcf_mpileup_py)
 
     return {
         'VarScan': {'variants': varscan_variants},
-        'SNVCaller': {'variants': snvcaller_variants}
+        'mpileup.py': {'variants': mpileup_py_variants}
     }
 
 def visualize_results(results):
@@ -60,21 +59,10 @@ def visualize_results(results):
 if __name__ == "__main__":
     input_mpileup = "NA12878_child.mpileup"
     output_vcf_varscan = "varscan_output.vcf"
-    output_vcf_snvcaller = "snvcaller_output.vcf"
-
-    # Verify file existence
-    if not os.path.exists("VarScan.jar"):
-        print("Error: VarScan.jar not found.")
-        exit(1)
-    if not os.path.exists("snv_caller.py"):
-        print("Error: snv_caller.py not found.")
-        exit(1)
-    if not os.path.exists(input_mpileup):
-        print(f"Error: Input mpileup file {input_mpileup} not found.")
-        exit(1)
+    output_vcf_mpileup_py = "mpileup_py_output.vcf"
 
     # Compare tools
-    results = compare_tools(input_mpileup, output_vcf_varscan, output_vcf_snvcaller)
+    results = compare_tools(input_mpileup, output_vcf_varscan, output_vcf_mpileup_py)
 
     # Visualize results
     visualize_results(results)
