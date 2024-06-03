@@ -11,33 +11,27 @@ def benchmark_tool(tool_cmd):
     max_memory = max(mem_usage)
     return runtime, max_memory
 
-def compare_tools(reference_fasta, reads_fastq, varscan_cmd, snvcaller_cmd, output_vcf_varscan, output_vcf_snvcaller):
-    """Compare VarScan and SNV Caller in terms of runtime, memory usage, and accuracy metrics."""
+def run_varscan(input_mpileup, output_vcf):
+    """Run VarScan tool."""
+    varscan_cmd = f"varscan mpileup2snp {input_mpileup} --output-vcf {output_vcf}"
+    subprocess.run(varscan_cmd, shell=True)
 
+def run_snv_caller(input_mpileup, output_vcf):
+    """Run SNV Caller tool."""
+    snv_caller_cmd = f"python snv_caller.py {input_mpileup} {output_vcf}"
+    subprocess.run(snv_caller_cmd, shell=True)
+
+def compare_tools(input_mpileup, output_vcf_varscan, output_vcf_snvcaller):
+    """Compare VarScan and SNV Caller in terms of runtime, memory usage, and number of variants."""
     # Benchmark VarScan
-    varscan_runtime, varscan_memory = benchmark_tool(varscan_cmd)
+    varscan_runtime, varscan_memory = benchmark_tool(f"varscan mpileup2snp {input_mpileup} --output-vcf {output_vcf_varscan}")
 
     # Benchmark SNV Caller
-    snvcaller_runtime, snvcaller_memory = benchmark_tool(snvcaller_cmd)
-
-    # Analyze results
-    # Assuming you have a function to compare VCF files and calculate metrics
-    varscan_metrics = analyze_vcf(output_vcf_varscan)
-    snvcaller_metrics = analyze_vcf(output_vcf_snvcaller)
+    snvcaller_runtime, snvcaller_memory = benchmark_tool(f"python snv_caller.py {input_mpileup} {output_vcf_snvcaller}")
 
     return {
-        'VarScan': {'runtime': varscan_runtime, 'memory': varscan_memory, **varscan_metrics},
-        'SNVCaller': {'runtime': snvcaller_runtime, 'memory': snvcaller_memory, **snvcaller_metrics}
-    }
-
-def analyze_vcf(vcf_file):
-    """Analyze a VCF file to calculate sensitivity, precision, and specificity."""
-    # Placeholder for actual implementation
-    # This function should read the VCF file and compare against known variants to calculate metrics
-    return {
-        'sensitivity': 0.95,
-        'precision': 0.90,
-        'specificity': 0.99
+        'VarScan': {'runtime': varscan_runtime, 'memory': varscan_memory},
+        'SNVCaller': {'runtime': snvcaller_runtime, 'memory': snvcaller_memory}
     }
 
 def visualize_results(results):
@@ -45,19 +39,12 @@ def visualize_results(results):
     tools = list(results.keys())
     runtimes = [results[tool]['runtime'] for tool in tools]
     memories = [results[tool]['memory'] for tool in tools]
-    sensitivities = [results[tool]['sensitivity'] for tool in tools]
-    precisions = [results[tool]['precision'] for tool in tools]
-    specificities = [results[tool]['specificity'] for tool in tools]
 
-    fig, axs = plt.subplots(2, 2, figsize=(12, 10))
-    axs[0, 0].bar(tools, runtimes, color=['blue', 'green'])
-    axs[0, 0].set_title('Runtime (seconds)')
-    axs[0, 1].bar(tools, memories, color=['blue', 'green'])
-    axs[0, 1].set_title('Memory Usage (MB)')
-    axs[1, 0].bar(tools, sensitivities, color=['blue', 'green'])
-    axs[1, 0].set_title('Sensitivity')
-    axs[1, 1].bar(tools, precisions, color=['blue', 'green'])
-    axs[1, 1].set_title('Precision')
+    fig, axs = plt.subplots(1, 2, figsize=(12, 6))
+    axs[0].bar(tools, runtimes, color=['blue', 'green'])
+    axs[0].set_title('Runtime (seconds)')
+    axs[1].bar(tools, memories, color=['blue', 'green'])
+    axs[1].set_title('Memory Usage (MB)')
 
     for ax in axs.flat:
         ax.set_ylabel('Value')
@@ -67,13 +54,18 @@ def visualize_results(results):
     plt.show()
 
 if __name__ == "__main__":
-    reference_fasta = "data/reference.fasta"
-    reads_fastq = "data/reads.fastq"
-    output_vcf_varscan = "results/varscan_output.vcf"
-    output_vcf_snvcaller = "results/snvcaller_output.vcf"
+    input_mpileup = "NA12878_child.mpileup"
+    output_vcf_varscan = "varscan_output.vcf"
+    output_vcf_snvcaller = "snvcaller_output.vcf"
 
-    varscan_cmd = f"varscan mpileup2snp {reference_fasta} {reads_fastq} --output-vcf {output_vcf_varscan}"
-    snvcaller_cmd = f"python scripts/code.py {reference_fasta} {reads_fastq} data/aligned_reads.bam {output_vcf_snvcaller}"
+    # Run VarScan
+    run_varscan(input_mpileup, output_vcf_varscan)
 
-    results = compare_tools(reference_fasta, reads_fastq, varscan_cmd, snvcaller_cmd, output_vcf_varscan, output_vcf_snvcaller)
+    # Run SNV Caller
+    run_snv_caller(input_mpileup, output_vcf_snvcaller)
+
+    # Compare tools
+    results = compare_tools(input_mpileup, output_vcf_varscan, output_vcf_snvcaller)
+
+    # Visualize results
     visualize_results(results)
