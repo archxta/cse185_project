@@ -11,4 +11,6 @@ plt.xlabel('Variant Position')
 plt.ylabel('Allele Frequency')
 plt.title('Allele Frequencies of Variants')
 plt.xticks(variant_positions)
-plt.show()
+
+# Save the plot as an image file
+plt.savefig('allele_frequency_plot.png')
