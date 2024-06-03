@@ -6,8 +6,11 @@ import sys
 def benchmark_tool(tool_cmd):
     """Benchmark a given command line tool for runtime."""
     start_time = time.time()
-    subprocess.run(tool_cmd, shell=True)
+    result = subprocess.run(tool_cmd, shell=True, capture_output=True, text=True)
     runtime = time.time() - start_time
+    if result.returncode != 0:
+        print(f"Error running command: {tool_cmd}")
+        print(result.stderr)
     return runtime
 
 def run_varscan(input_mpileup, output_vcf):
@@ -17,7 +20,10 @@ def run_varscan(input_mpileup, output_vcf):
         f"--min-var-frequency 0.2 --min-freq-for-hom 0.8 --p-value 0.01 "
         f"--output-vcf 1 --variants-only > {output_vcf}"
     )
-    subprocess.run(varscan_cmd, shell=True)
+    result = subprocess.run(varscan_cmd, shell=True, capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"Error running VarScan: {varscan_cmd}")
+        print(result.stderr)
 
 def run_mpileup_py(input_mpileup, output_vcf, min_var_freq, min_avg_qual, p_value_thresh):
     """Run mpileup.py tool."""
@@ -25,7 +31,13 @@ def run_mpileup_py(input_mpileup, output_vcf, min_var_freq, min_avg_qual, p_valu
         f"python3 mpileup.py {input_mpileup} {output_vcf} "
         f"{min_var_freq} {min_avg_qual} {p_value_thresh}"
     )
-    subprocess.run(mpileup_py_cmd, shell=True)
+    print(f"Running command: {mpileup_py_cmd}")
+    result = subprocess.run(mpileup_py_cmd, shell=True, capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"Error running mpileup.py: {mpileup_py_cmd}")
+        print(result.stderr)
+    else:
+        print(f"mpileup.py output:\n{result.stdout}")
 
 def count_variants(vcf_file):
     """Count the number of variants in a VCF file."""
@@ -33,6 +45,7 @@ def count_variants(vcf_file):
         with open(vcf_file, 'r') as f:
             variants = sum(1 for line in f if not line.startswith('#'))
     except FileNotFoundError:
+        print(f"File not found: {vcf_file}")
         variants = 0
     return variants
 
