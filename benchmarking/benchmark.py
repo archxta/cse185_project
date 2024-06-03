@@ -16,7 +16,7 @@ def run_varscan(input_mpileup, output_vcf):
 
 def run_snv_caller(input_mpileup, output_vcf):
     """Run SNV Caller tool."""
-    snv_caller_cmd = f"python3 snv_caller.py {input_mpileup} {output_vcf}"
+    snv_caller_cmd = f"python3 mpileup.py {input_mpileup} {output_vcf}"
     subprocess.run(snv_caller_cmd, shell=True)
 
 def count_variants(vcf_file):
