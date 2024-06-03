@@ -16,4 +16,7 @@ plt.yticks([])
 plt.xlabel('Position')
 plt.title('Sequence Comparison')
 plt.legend()
-plt.show()
+
+# Save the plot to a file
+plt.savefig('sequence_comparison.png')
+plt.close()
