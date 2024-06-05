@@ -44,25 +44,25 @@ We have now generated the BAM files with aligned sequenced reads that are sorted
 
 # Basic Usage for creating the BAM files
 
-Step 1. Index the reference genome using BWA and Samtools: 
+Step 1: Index the reference genome using BWA and Samtools: 
 
 ``` bwa index referencegenome.fasta ```
 
 ``` samtools faidx referencegenome.fasta ```
 
-Step 2. Align the reads to the reference genome using BWA and generate SAM files
+Step 2: Align the reads to the reference genome using BWA and generate SAM files
 
 ``` bwa mem referencegenome.fasta variantdata.fasta > aligned_reads.sam ```
 
-Step 3. Convert the SAM files to BAM files
+Step 3: Convert the SAM files to BAM files
 
 ``` samtools view -S -b aligned_reads.sam > aligned_reads.bam ```
 
-Step 4. 7: Sort the BAM files
+Step 4: Sort the BAM files
 
 ``` samtools sort aligned_reads.bam -o sorted_aligned_reads.bam ```
 
-Step 5. Index the BAM files
+Step 5; Index the BAM files
 
 ``` samtools index sorted_aligned_reads.bam ```
 
