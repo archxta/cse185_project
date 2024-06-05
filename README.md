@@ -42,7 +42,33 @@ Step 2: Run our setup script in your terminal to generate the BAM files (Note: i
 
 We have now generated the BAM files with aligned sequenced reads that are sorted and indexed. We will use these BAM files to identify single nucleotide substitutions using our tool, SNVC. 
 
-# Basic Usage
+# Basic Usage for creating the BAM files
+
+1. Index the reference genome using BWA and Samtools: 
+
+``` bwa index referencegenome.fasta ```
+
+``` samtools faidx referencegenome.fasta ```
+
+2. Align the reads to the reference genome using BWA and generate SAM files
+
+``` bwa mem referencegenome.fasta variantdata.fasta > aligned_reads.sam ```
+
+3. Convert the SAM files to BAM files
+
+``` samtools view -S -b aligned_reads.sam > aligned_reads.bam ```
+
+4. 7: Sort the BAM files
+
+``` samtools sort aligned_reads.bam -o sorted_aligned_reads.bam ```
+
+5. Index the BAM files
+
+``` samtools index sorted_aligned_reads.bam ```
+
+We have now generated the BAM files with aligned sequenced reads that are sorted and indexed. We will use these BAM files to identify single nucleotide substitutions using our tool, SNVC. 
+
+# Basic Usage for running SNVC
 
 THe basic usage of SNVC with a .fasta file as an input is: 
 
@@ -52,10 +78,9 @@ THe basic usage of SNVC with a .mpileup file as an input is:
 
 ``` python3 mpileup.py data.mpileup output.vcf 0.2 ```
 
-
 ## Testing SNVC 
 
-To run SNVC on our test datasets (see data folder), run the following commands
+To run SNVC on our test datasets (see data folder), run the following commands: 
 
 ```python3 code.py data/reference.fasta data/variant1.fasta data/sorted_aligned1_reads.bam results/output1.vcf```
 
