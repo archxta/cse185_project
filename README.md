@@ -40,8 +40,6 @@ Step 2: Run our setup script in your terminal to generate the BAM files (Note: i
 
 ```bash setup.sh```
 
-We have now generated the BAM files with aligned sequenced reads that are sorted and indexed. We will use these BAM files to identify single nucleotide substitutions using our tool, SNVC. 
-
 # Basic Usage for creating the BAM files
 
 Step 1: Index the reference genome using BWA and Samtools: 
