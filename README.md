@@ -44,9 +44,14 @@ We have now generated the BAM files with aligned sequenced reads that are sorted
 
 # Basic Usage
 
-THe basic usage of SNVC is: 
+THe basic usage of SNVC with a .fasta file as an input is: 
 
 ``` python3 code.py variantdataset.fasta alignedreads.bam output.vcf ```
+
+THe basic usage of SNVC with a .mpileup file as an input is: 
+
+``` python3 mpileup.py data.mpileup output.vcf 0.2 ```
+
 
 ## Testing SNVC 
 
