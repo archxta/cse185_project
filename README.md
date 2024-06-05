@@ -45,14 +45,8 @@ To run SNVC on our test datasets (see data folder), run the following commands
 
 ```python3 code.py data/reference.fasta data/variant3.fasta data/sorted_aligned3_reads.bam results/output3.vcf```
 
-This should have generated the final VCF file which contains information about the genetic variants detected in our DNA sequencing data that we obtained from a sickle cell mutation on the HBB gene. You can view the VCF file contents using the ```cat``` command followed by the filepath and filename (ex. ```cat results/output1.vcf```
+This should have generated the final VCF file which contains information about the genetic variants detected in our DNA sequencing data that we obtained from a sickle cell mutation on the HBB gene. You can view the VCF file contents using the ```cat``` command followed by the filepath and filename (ex. ```cat results/output1.vcf```. Here is a sample VCF file output for one of our datasets: 
 
-## Testing VarScan
+![ieng6](./sampleoutput.png)
 
-
-
-
-
-
-
-
+From this output, we can see that that there is a variant at position 53 within this region where the reference 'T' is substituted with an 'A'. 
