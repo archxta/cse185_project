@@ -26,7 +26,7 @@ To install these tools please run the following commands:
 
 ```python3 -m pip install matplotlib ```
 
-Once you have installed python3 on your laptop and installed the brew commmand, please install 
+Now that all the necessary tools are installed, we will now install SNVC. 
 
 # Installation Instructions
 
