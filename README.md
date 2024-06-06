@@ -26,7 +26,7 @@ To install these tools please run the following commands:
 
 ```python3 -m pip install matplotlib ```
 
-Now that all the necessary tools are installed, we will now install SNVC. 
+Now that all the necessary tools are installed, we will now create the BAM files. 
 
 # Installation Instructions
 
