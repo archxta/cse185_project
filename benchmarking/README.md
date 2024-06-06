@@ -1,5 +1,7 @@
 # Benchmarking Single Nucleotide Variant Caller (SNVC) against VarScan
 
+For convinience and datasize limitation purposes, we are using the .mpileup file that we already generated dunring Lab1 to perform benchmarking. We will be using the NA12878_child.mpileup - this can be downloaded from the Juypter Notebook folder corresponding to Lab1. We have also included it in this GitHub Repository for easier access. 
+
 ## Step 1: Running our tool on data from Lab1
 
 ## Step 2: Run VarScan on the same input file by following the steps below:
