@@ -4,6 +4,8 @@ For convinience and datasize limitation purposes, we are using the .mpileup file
 
 ## Step 1: Running our tool on data from Lab1
 
+python3 mpileup.py NA12878_child.mpileup snvoutput.vcf 
+
 ## Step 2: Run VarScan on the same input file by following the steps below:
 Run the folloring commands:
 
