@@ -7,7 +7,7 @@ For convinience and datasize limitation purposes, we are using the .mpileup file
 python3 mpileup.py NA12878_child.mpileup snvoutput.vcf 
 
 ## Step 2: Run VarScan on the same input file by following the steps below:
-Run the folloring commands:
+Run the following commands:
 
 Downloading VarScan:
 curl -L https://sourceforge.net/projects/varscan/files/VarScan.v2.3.9.jar/download > VarScan.jar
