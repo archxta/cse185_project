@@ -42,20 +42,20 @@ def analyze_reads(bam_file, reference_fasta):
 
         for base, count in base_counts.items():
             if base != ref_base and count / total_reads > 0.2:
-                 variants.append((ref_name, ref_pos+1, ref_base, base, af, dp))
+                 v variants.append((ref_name, ref_pos+1, ref_base, base))
 
     return variants
 
 def write_vcf(variants, reference_fasta, output_vcf):
     vcf_header = f"""##fileformat=VCFv4.2
 ##reference={reference_fasta}
-#CHROM\tPOS\tREF\tALT\tAF\tDP"""
+#CHROM\tPOS\tREF\tALT"""
     os.makedirs(os.path.dirname(output_vcf), exist_ok=True)
     with open(output_vcf, 'w') as vcf:
         vcf.write(vcf_header + '\n')
         for variant in variants:
-            chrom, pos, ref, alt, af, dp = variant
-            vcf.write(f"{chrom}\t{pos}\t{ref}\t{alt}\t{af}\t{dp}\n")
+            chrom, pos, ref, alt = variant
+            vcf.write(f"{chrom}\t{pos}\t{ref}\t{alt}\n")
 
 def main():
     if len(sys.argv) != 5:
