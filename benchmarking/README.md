@@ -6,7 +6,7 @@ For convenience and datasize limitation purposes, we are using the .mpileup file
 
 To run our tool on the benchmark data, please type the following into the terminal.
 
-python3 mpileup.py NA12878_child.mpileup snvoutput.vcf 
+python3 mpileup.py NA12878_child.mpileup output.vcf .2
 
 ## Step 2: Run VarScan on the same input file by following the steps below:
 Run the following commands:
