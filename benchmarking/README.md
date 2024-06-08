@@ -17,8 +17,4 @@ VarScan has many additional features for advanced filtering. Here we will set th
 
  ```java -jar VarScan.jar mpileup2snp NA12878_child.mpileup --min-var-frequency 0.2 --min-freq-for-hom 0.8 --p-value 0.01 --output-vcf 1 --variants-only > varscanoutput.vcf```
 
-We can now look at the resulting output files from both tools by comparing the VCF files - varscanoutput.vcf and snvoutput.vcf 
-
-## Step 3: Running the benchmarking script
-
-python3 benchmark.py
+We can now look at the resulting output files from both tools by comparing the VCF files - varscanoutput.vcf and snvoutput.vcf
